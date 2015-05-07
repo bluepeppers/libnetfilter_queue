@@ -86,11 +86,12 @@ impl Handle {
     /// Start listening using any attached queues
     ///
     /// This will only listen on queues attached with `queue_builder`.
-    /// `length` determines the amount of a packet to grab from the queue at a time.
+    /// `length` determines the amount of a packet to grab from the queue at a time, in bits.
     /// If you are using `queue::Queue::CopyMode(SIZE)` it must match `SIZE`.
     pub fn start(&mut self, length: u16) {
         unsafe {
-            let buffer: *mut c_void = malloc(mem::size_of::<c_char>() as u64 * length as u64);
+            // TODO: Get rid of malloc
+            let buffer: *mut c_void = malloc(length as u64);
             if buffer.is_null() {
                 panic!("Failed to allocate packet buffer");
             }
@@ -114,6 +115,7 @@ impl Handle {
     /// For example, to parse `IPHeader`, use `start_sized<IPHeader>()`.
     pub fn start_sized<P: Payload>(&mut self) {
         let bytes = mem::size_of::<P>() as u16;
-        self.start(bytes * 8)
+        // netlink header (128 bits) + payload
+        self.start(128 + bytes * 8)
     }
 }

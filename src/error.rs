@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 use libc::c_int;
 use std::error::Error as Base;
 use std::fmt;

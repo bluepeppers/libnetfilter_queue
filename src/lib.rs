@@ -11,10 +11,10 @@ extern crate lazy_static;
 
 mod ffi;
 
-mod error;
 mod util;
 mod lock;
 
+pub mod error;
 pub mod handle;
 pub mod queue;
 pub mod message;
